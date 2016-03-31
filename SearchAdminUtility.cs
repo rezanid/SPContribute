@@ -1,5 +1,5 @@
 
-namespace be.axa.ca.Extranetpro.Frontend.Utilities
+namespace SPContrib.Utilities
 {
     using System;
     using System.Collections.Generic;
