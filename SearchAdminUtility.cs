@@ -6,12 +6,9 @@ namespace SPContrib.Utilities
     using System.Linq;
     using System.Xml.Linq;
     using System.Xml.XPath;
-    using Extranetpro.Common;
-    using Extranetpro.Common.Configuration.Types;
     using Microsoft.Office.Server.Search.Administration;
     using Microsoft.SharePoint;
     using Microsoft.SharePoint.Administration;
-    using Be.Axa.Shared.SharePoint.Core.Shared.Helpers;
 
     //TODO: Extract all strings from SearchAdminUtility and put them in the Configuration class.
     //TODO: Split this class in two to separate ContentSource functions and MetadataProperty functions.
@@ -118,7 +115,7 @@ namespace SPContrib.Utilities
                 var categoryName = TryGetAttributeValue(categoryCfg, "Name");
                 if (string.IsNullOrEmpty(categoryName))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Critical, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Critical, LogCategory,
                         string.Format(CategoryAttributeMissingLogFormat, "Name"));
                     continue;
                 }
@@ -153,14 +150,14 @@ namespace SPContrib.Utilities
                 var managedPropName = TryGetAttributeValue(managedPropCfg, "Name");
                 if (string.IsNullOrEmpty(managedPropName))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Critical, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Critical, LogCategory,
                         string.Format(UnknownManagedPropertyAttributeMissingLogFormat, "Name"));
                     continue;
                 }
                 var managedPropType = TryGetAttributeValue(managedPropCfg, "Type");
                 if (string.IsNullOrEmpty(managedPropType))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Critical, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Critical, LogCategory,
                         string.Format(KnownManagedPropertyAttributeMissingLogFormat, managedPropName, "Type"));
                     continue;
                 }
@@ -202,7 +199,7 @@ namespace SPContrib.Utilities
                         }
                         else
                         {
-                            EproFramework.LogMessage(SeverityLevels.Critical, LogCategory,
+                            Logger.LogMessage(SeverityLevels.Critical, LogCategory,
                                 string.Format(PropertyMappingFailedExceptionFormat, managedPropName));
                         }
                     }
@@ -230,7 +227,7 @@ namespace SPContrib.Utilities
             }
             if (result != null && result.Count > 1)
             {
-                EproFramework.LogMessage(LoggingType.Critical,
+                Logger.LogMessage(LoggingType.Critical,
                     string.Format(PropertyMappingFailedMutipleMatchLogFormat,
                         crawledPropName,
                         categoryName,
@@ -238,7 +235,7 @@ namespace SPContrib.Utilities
             }
             else
             {
-                EproFramework.LogMessage(LoggingType.Critical,
+                Logger.LogMessage(LoggingType.Critical,
                     string.Format(PropertyMappingFailedNotFoundLogFormat,
                         crawledPropName,
                         categoryName));
@@ -260,7 +257,7 @@ namespace SPContrib.Utilities
                 }
                 catch (Exception ex)
                 {
-                    EproFramework.LogMessage(LoggingType.Critical,
+                    Logger.LogMessage(LoggingType.Critical,
                         string.Format(CreateManagedPropertyExceptionFormat,
                             managedPropName,
                             ex));
@@ -283,14 +280,14 @@ namespace SPContrib.Utilities
             {
                 if (string.IsNullOrEmpty(propName))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Warning, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Warning, LogCategory,
                         CrawledPropertyRemoveFailedNameMissingLog);
                     continue;
                 }
                 var propToRemove = crawledPropsCache.FirstOrDefault(cp => cp.Name == propName);
                 if (propToRemove == null)
                 {
-                    EproFramework.LogMessage(SeverityLevels.Warning, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Warning, LogCategory,
                         string.Format(CrawledPropertyRemoveFailedNotFoundLogFormat, propName));
                     continue;
                 }
@@ -317,7 +314,7 @@ namespace SPContrib.Utilities
                 }
                 catch (Exception ex)
                 {
-                    EproFramework.LogMessage(LoggingType.Critical,
+                    Logger.LogMessage(LoggingType.Critical,
                         string.Format(CreateCrawledPropertyExceptionFormat,
                             TryGetAttributeValue(crawledPropCfg, "Name"),
                             ex));
@@ -332,13 +329,13 @@ namespace SPContrib.Utilities
             {
                 if (string.IsNullOrEmpty(propName))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Warning, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Warning, LogCategory,
                         PropertyRemoveFailedNameMissingLog);
                     continue;
                 }
                 if (!schema.AllManagedProperties.Contains(propName))
                 {
-                    EproFramework.LogMessage(SeverityLevels.Warning, LogCategory,
+                    Logger.LogMessage(SeverityLevels.Warning, LogCategory,
                         string.Format(PropertyRemoveFailedNotFoundLogFormat, propName));
                     continue;
                 }
@@ -385,7 +382,7 @@ namespace SPContrib.Utilities
                 }
                 else
                 {
-                    EproFramework.LogMessage(
+                    Logger.LogMessage(
                         SeverityLevels.Warning,
                         LogCategory,
                         string.Format(ContentSourceNotFoundRemovalFailedLogFormat,
@@ -401,7 +398,7 @@ namespace SPContrib.Utilities
                 var contentSourceExists = content.ContentSources.Exists(contentSourceName);
                 if (contentSourceExists)
                 {
-                    EproFramework.LogMessage(
+                    Logger.LogMessage(
                         SeverityLevels.Information,
                         LogCategory,
                         string.Format(ContentSourceExistsLogFormat, 
